@@ -28,6 +28,12 @@ pub const RESOURCE_NAME: &str = "rs_test_table";
 ///
 pub const FIELD_NAMES: [&str; 5] = ["id", "name", "age", "cash", "dep"];
 
+pub const COL_NAME_ID: &str = "id";
+pub const COL_NAME_NAME: &str = "name";
+pub const COL_NAME_AGE: &str = "age";
+pub const COL_NAME_CASH: &str = "cash";
+pub const COL_NAME_DEP: &str = "dep";
+
 ///
 /// The data column set of the RsTestTable
 ///

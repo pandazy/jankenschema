@@ -28,6 +28,8 @@ pub const RESOURCE_NAME: &str = "%(resource_name)s";
 ///
 pub const FIELD_NAMES: [&str; %(field_count)s] = [%(field_names)s];
 
+%(const_table_names)s
+
 ///
 /// The data column set of the %(table_entity)s
 ///
@@ -61,7 +63,11 @@ def get_rs_code(resource_name: str, column_defs: list[DbColumn]) -> str:
     field_names = []
     assignments = []
     default_vals = []
+    const_table_names = []
     for col in column_defs:
+        const_table_names.append(
+            f'pub const COL_NAME_{col.name.upper()}: &str = "{col.name}";'
+        )
         normal_field_type = TYPE_MAP[col.field_type]["rs"]
         field_type = (
             normal_field_type if col.not_null else "Option<%s>" % normal_field_type
@@ -97,4 +103,5 @@ def get_rs_code(resource_name: str, column_defs: list[DbColumn]) -> str:
         "resource_name": resource_name,
         "assignments": "\n".join(assignments),
         "set_default_vals": "\n".join(default_vals),
+        "const_table_names": "\n".join(const_table_names),
     }

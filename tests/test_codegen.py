@@ -71,3 +71,15 @@ def test_generating_ts_code():
         generate_code(TEST_DB_PATH, "nonsense/path", "ts")
     with raises(UnsupportedExtensionError):
         generate_code(TEST_DB_PATH, TEST_ASSET_PATH, "css")
+
+
+def test_generating_rs_code():
+    init()
+    assert not os.path.exists(os.path.join(TEST_ASSET_PATH, "user.rs"))
+    assert not os.path.exists(os.path.join(TEST_ASSET_PATH, "vendors.rs"))
+    assert not os.path.exists(os.path.join(TEST_ASSET_PATH, "mod.rs"))
+
+    generate_code(TEST_DB_PATH, TEST_ASSET_PATH, "rs")
+    assert os.path.exists(os.path.join(TEST_ASSET_PATH, "user.rs"))
+    assert os.path.exists(os.path.join(TEST_ASSET_PATH, "vendors.rs"))
+    assert os.path.exists(os.path.join(TEST_ASSET_PATH, "mod.rs"))
