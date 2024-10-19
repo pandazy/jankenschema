@@ -1,1 +1,1 @@
-Improve automatic release notes generation
+Improve automatic release notes generation again
