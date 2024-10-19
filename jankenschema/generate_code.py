@@ -56,9 +56,14 @@ def generate_by_db(db_cursor: sqlite3.Cursor, dest_folder: str, code_ext: str):
         raise UnsupportedExtensionError("Unsupported code extension")
 
     schemas = get_schemas(db_cursor)
+    mod_content = [f"pub mod {table.lower()};" for table in schemas.keys()]
 
     for table, columns in schemas.items():
         code = CONVERT_MAP[code_ext](table, columns)
-        dest_file = os.path.join(dest_folder, table + "." + code_ext)
+        dest_file = os.path.join(dest_folder, table.lower() + "." + code_ext)
         with open(dest_file, "w") as f:
             f.write(code)
+    if code_ext == "rs" and len(mod_content) > 0:
+        dest_mod_file = os.path.join(dest_folder, "mod." + code_ext)
+        with open(dest_mod_file, "w") as f:
+            f.write("\n".join(mod_content))
