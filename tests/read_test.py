@@ -28,3 +28,20 @@ def test_read(mem_db):
             ]
         }
         assert schemas == expected
+
+
+def test_obj_meta_display():
+    column_a = DbColumn((1, "id", "INT", 0, None, 1))
+    column_b = DbColumn((2, "name", "TEXT", 0, None, 0))
+
+    assert column_a.get_raw() == (1, "id", "INT", 0, None, 1)
+
+    assert str(column_a) == "Schema(id, INT, True, None, True)"
+    assert repr(column_a) == "Schema(id, INT, True, None, True)"
+    assert str(column_b) == "Schema(name, TEXT, False, None, False)"
+    assert repr(column_b) == "Schema(name, TEXT, False, None, False)"
+
+    assert column_a == column_a
+    assert column_b == column_b
+    assert column_a != column_b
+    assert column_a != 1

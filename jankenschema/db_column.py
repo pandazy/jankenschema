@@ -48,7 +48,7 @@ class DbColumn:
 
     def __eq__(self, other):
         if isinstance(other, DbColumn):
-            return (self.__raw__ == other.__raw__) or (
+            return (
                 self.name == other.name
                 and self.field_type == other.field_type
                 and self.not_null == other.not_null
