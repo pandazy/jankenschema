@@ -36,9 +36,7 @@ def generate_code(src_db_path: str, dest_folder: str, code_ext: str):
     :param dest_folder: Path to the destination folder where the schema code will be created
     :param code_ext: The code extension (e.g., .ts)
     """
-    if src_db_path is None:
-        raise CodeGeneratorPathError("No database path provided")
-    if not os.path.exists(src_db_path):
+    if not (src_db_path is not None and os.path.exists(src_db_path)):
         raise CodeGeneratorPathError("Database path does not exist")
 
     with sqlite3.connect(src_db_path) as conn:
@@ -52,7 +50,7 @@ def generate_by_db(db_cursor: sqlite3.Cursor, dest_folder: str, code_ext: str):
     :param dest_folder: Path to the destination folder where the schema code will be created
     :param code_ext: The code extension (e.g., .ts)
     """
-    if not os.path.exists(dest_folder):
+    if not (dest_folder is not None and os.path.exists(dest_folder)):
         raise CodeGeneratorPathError("Destination folder does not exist")
     if not code_ext or (code_ext.lower() not in SUPPORTED_EXT):
         raise UnsupportedExtensionError("Unsupported code extension")
