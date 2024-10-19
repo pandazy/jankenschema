@@ -29,20 +29,35 @@ CONVERT_MAP = {
 }
 
 
-def generate_code(src_db_path: str, dest_folder: str, code_ext: str) -> str:
+def generate_code(src_db_path: str, dest_folder: str, code_ext: str):
+    """
+    Generate code from a SQLite database schema
+    :param src_db_path: Path to the SQLite database
+    :param dest_folder: Path to the destination folder where the schema code will be created
+    :param code_ext: The code extension (e.g., .ts)
+    """
     if src_db_path is None:
         raise CodeGeneratorPathError("No database path provided")
     if not os.path.exists(src_db_path):
         raise CodeGeneratorPathError("Database path does not exist")
+
+    with sqlite3.connect(src_db_path) as conn:
+        generate_by_db(conn.cursor(), dest_folder, code_ext)
+
+
+def generate_by_db(db_cursor: sqlite3.Cursor, dest_folder: str, code_ext: str):
+    """
+    Generate code from a SQLite database schema
+    :param db_cursor: SQLite database cursor
+    :param dest_folder: Path to the destination folder where the schema code will be created
+    :param code_ext: The code extension (e.g., .ts)
+    """
     if not os.path.exists(dest_folder):
         raise CodeGeneratorPathError("Destination folder does not exist")
     if not code_ext or (code_ext.lower() not in SUPPORTED_EXT):
         raise UnsupportedExtensionError("Unsupported code extension")
 
-    schemas = []
-    with sqlite3.connect(src_db_path) as conn:
-        cursor = conn.cursor()
-        schemas = get_schemas(cursor)
+    schemas = get_schemas(db_cursor)
 
     for table, columns in schemas.items():
         code = CONVERT_MAP[code_ext](table, columns)
