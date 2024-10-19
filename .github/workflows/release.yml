@@ -14,7 +14,6 @@ jobs:
     - uses: actions/checkout@v4
     - uses: ncipollo/release-action@v1
       with:
-        artifacts: "release.tar.gz,foo/*.txt"
         bodyFile: "release.md"
 
   publish:
