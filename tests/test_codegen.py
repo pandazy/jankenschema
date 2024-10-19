@@ -1,6 +1,12 @@
 import os
 from sqlite3 import connect, Row
-from jankenschema import generate_code
+
+from pytest import raises
+from jankenschema import (
+    generate_code,
+    CodeGeneratorPathError,
+    UnsupportedExtensionError,
+)
 
 
 TEST_INIT_SQL = """
@@ -54,3 +60,14 @@ def test_generating_ts_code():
     generate_code(TEST_DB_PATH, TEST_ASSET_PATH, "ts")
     assert os.path.exists(os.path.join(TEST_ASSET_PATH, "user.ts"))
     assert os.path.exists(os.path.join(TEST_ASSET_PATH, "vendors.ts"))
+
+    with raises(CodeGeneratorPathError):
+        generate_code(None, TEST_ASSET_PATH, "ts")
+    with raises(CodeGeneratorPathError):
+        generate_code("nonsense/path", TEST_ASSET_PATH, "ts")
+    with raises(CodeGeneratorPathError):
+        generate_code(TEST_DB_PATH, None, "ts")
+    with raises(CodeGeneratorPathError):
+        generate_code(TEST_DB_PATH, "nonsense/path", "ts")
+    with raises(UnsupportedExtensionError):
+        generate_code(TEST_DB_PATH, TEST_ASSET_PATH, "css")
