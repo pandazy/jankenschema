@@ -23,6 +23,7 @@ TEST_DB_PATH = os.path.join(TEST_ASSET_PATH, "test.db")
 
 
 def clean_assets():
+    """Clean the test assets"""
     for root, dirs, files in os.walk(TEST_ASSET_PATH, topdown=False):
         for name in files:
             filename = os.path.join(root, name)
@@ -38,6 +39,7 @@ def clean_assets():
 
 
 def init():
+    """Initialize the test assets"""
     clean_assets()
     with connect(TEST_DB_PATH) as conn:
         conn.executescript(TEST_INIT_SQL)
